@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 2 - Fetch WazirX API Data</title>
+</head>
+<body>
+    <h1>Lab 2 - Fetch WazirX API Data</h1>
+    <div id="data-output">Loading data...</div>
+
+    <script>
+        async function fetchData() {
+            try {
+                const response = await fetch('https://api.wazirx.com/sapi/v1/tickers/24hr');
+                if (!response.ok) {
+                    throw new Error('Network response was not okay');
+                }
+                const data = await response.json();
+
+                const outputDiv = document.getElementById('data-output');
+                outputDiv.innerHTML = ''; 
+                data.slice(0, 10).forEach(ticker => {
+                    outputDiv.innerHTML += `
+                        <div style="border: 1px solid #ddd; margin: 10px; padding: 10px;">
+                            <p><strong>Symbol:</strong> ${ticker.symbol}</p>
+                            <p><strong>Last Price:</strong> ${ticker.lastPrice}</p>
+                            <p><strong>Price Change (%):</strong> ${ticker.priceChangePercent}%</p>
+                        </div>
+                    `;
+                });
+            } catch (error) {
+                document.getElementById('data-output').innerHTML = 'Error fetching data: ' + error.message;
+            }
+        }
+        fetchData();
+    </script>
+</body>
+</html>
